@@ -288,6 +288,7 @@ Make sure this is what you want because it can have unintended side effects if y
 
 Example BackupJobs format:
 
+```
 {
     Jobs:
     [
@@ -329,6 +330,7 @@ Example BackupJobs format:
         }
     ]
 }
+```
 
 .PARAMETER ParallelJobs
 Used in combination with BackupJobs when multiple jobs are in the configured, this specifies how many will run at one time. When one job completes, the next one will be queued.
@@ -363,32 +365,22 @@ The use case for this would be a volume snapshot maintenance job.
 
 ## Examples
 
-.EXAMPLE
 PowerBak -FromServer SQLServer1 -FromPath MSSQL:\* -ToServer localhost -ToPath MSSQL: -BackupType Full -CopyOnly
 
-.EXAMPLE
 PowerBak -FromServer SQLServer2 -FromPath "MSSQL:SrcInstance\{SELECT Name FROM Sys.Databases WHERE Name NOT IN ('skip1', 'skip2')}" -ToServer localhost -ToPath MSSQL:DestInstance,"C:\MyBackups\Incrementals\" -AppendFromServerFolderToPath -AppendDateTimeFolderToPath
 
-.EXAMPLE
 PowerBak -FromServer SQLServer1 -FromPath MSSQL:\* -ToServer localhost -ToPath MSSQL:,"C:\MyBackups\Incrementals\" -AppendFromServerFolderToPath -AppendDateTimeFolderToPath -SinceHours 24
 
-.EXAMPLE
 PowerBak -FromServer SQLServer1 -FromPath MSSQL:\* -ToServer localhost -ToPath MSSQL:,"C:\MyBackups\Incrementals\SQLServer1\{[DateTime]::Now.ToString('yyyyMMdd-HHmm')}\" -SinceHours 24
 
-.EXAMPLE
 PowerBak -FromServer localhost -FromPath C:\MyBackups\MyDatabase -ToServer SQLServer3 -ToPath MSSQL:NewInstance -AutoRestoreToDateTime "2019-01-14 1:00:00 PM"
 
-.EXAMPLE
 PowerBak -FromServer SQLServer2 -FromPath MSSQL:\* -ToServer localhost -ToPath MSSQL:,C:\MyBackups\Incrementals\ -SnapshotManagement @{Volume="Z:"; Expose="C:\MyBackups\Snapshots\"; DaysOfMonth=1,15; DeleteAfterDays=45;} -AppendFromServerFolderToPath -AppendDateTimeFolderToPath
 
-.EXAMPLE
 PowerBak -FromServer localhost -FromPath C:\MyBackups\MyDatabase.dat -ToServer localhost -ToPath C:\MyBackups\ -SaveFilesAsBak
 
-.EXAMPLE
 PowerBak -BackupJobs C:\PowerBak\AllJobs.config -EmailNotification
 
-.EXAMPLE
 PowerBak -BackupJobs C:\PowerBak\AllJobs.config -SinceHours 24
 
-.EXAMPLE
 PowerBak -BackupJobs C:\PowerBak\AllJobs.config -ScheduledTask @{TaskName="MyBackup"; StartTime="8:00 PM"; LogonId="NETWORKSERVICE"; LogonType="ServiceAccount"; RunLevel="Highest"; EmailNotification}
