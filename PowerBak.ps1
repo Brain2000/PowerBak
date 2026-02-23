@@ -2243,7 +2243,6 @@ function ReceiveFile
             10
             {
                 $deleteFile = $true; #remove incomplete file
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "101`r`n"); } catch { }
                 $null = SendOOBCommand $tcp 'A'; #bort
                 return $false;
                 break;
@@ -2252,7 +2251,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "101`r`n"); } catch
             11
             {
                 $deleteFile = $true; #remove incomplete file
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "102`r`n"); } catch { }
                 $null = SendOOBCommand $tcp 'A'; #one
                 #no OOB received, wait for it here... doesn't matter what it is, we still failed
                 $OOBCmd = WaitOOBCommand $tcp;
@@ -2607,7 +2605,6 @@ function ReceiveSQLStream
                 1 #an error has occurred, make sure we delete any incomplete file (if one exists). This will send back an 'A'bort by default
                 {
                     $deleteFile = $true; #remove incomplete file
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "103`r`n"); } catch { }
                     if(-1 -notin (CheckDBError $DBError))
                     {
                         Write-Error "Database Restore Error: !MUTED ERROR! $($source.paths[0].path)\$($meta.name) -> $($DBError.Message)";
@@ -2626,7 +2623,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "103`r`n"); } catch
                         #we're already running a full backup, so ... abort?!?
                         #Write-Verbose "$($dest.server)\$($meta.name): Sending notification: Abort";
                         Write-Error "Database Restore Error: $($dest.server)\$($meta.name) -> ERROR WHEN ALREADY RUNNING FULL BACKUP: $($DBError.Message)";
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "104`r`n"); } catch { }
                         $OOBCmd = 'A';
                     }
                     $deleteFile = $true; #remove incomplete file
@@ -2716,7 +2712,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "104`r`n"); } catch
 
                     $OOBCmd = if($disableRestartOption) { 'T' } else { if($enableContinueAfterErrorOption) { 'U' } else { 'S' } }; #request retry of same database
                     $deleteFile = $true; #remote incomplete file
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "meltdown`r`n"); } catch { }
                 }
             }
         }
@@ -2937,7 +2932,6 @@ Write-Verbose "::SendFile: CopyStream, results=$($result)";
                     else
                     {
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "1`r`n"); } catch { }
                     }
                     break;
                 }
@@ -2946,21 +2940,17 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "1`r`n"); } catch {
                 {
                     #we received a fail OOB and stopped transmitting
                     Write-Verbose "$($source.paths[0].path): Received Status Message From Destination: Abort";
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "105`r`n"); } catch { }
                     $null = SendOOBCommand $tcp 'A'; #signal far end that we aborted
                     $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "2`r`n"); } catch { }
                     break;
                 }
 
                 11
                 {
                     #we failed, and have not received a message from the far end
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "106`r`n"); } catch { }
                     $null = SendOOBCommand $tcp 'A'; #signal far end that we aborted
                     $null = WaitOOBCommand $tcp; #receive back whatever the far end sends, doesn't matter, we already failed
                     $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "3`r`n"); } catch { }
                     break;
                 }
 
@@ -2983,20 +2973,16 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "3`r`n"); } catch {
                     }
                     elseif($command -eq 'T')
                     {
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "107`r`n"); } catch { }
                         $null = SendOOBCommand $tcp 'A'; #abort
 
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "4`r`n"); } catch { }
                         Write-Error "Database Restore Error: $($filename) -> Requested to retry backup without OPTION RESTART, but we already did!?";
                     }
                     else
                     {
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "108`r`n"); } catch { }
                         $null = SendOOBCommand $tcp 'A'; #abort
 
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "4b`r`n"); } catch { }
                         Write-Error "Database Restore Error: $($filename) -> Cannot request to retry without RESTART option for file copy!? (this should never happen)";
                     }
                     break;
@@ -3021,20 +3007,16 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "4b`r`n"); } catch 
                     }
                     elseif($command -eq 'U')
                     {
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "109`r`n"); } catch { }
                         $null = SendOOBCommand $tcp 'A'; #abort
 
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "5`r`n"); } catch { }
                         Write-Error "Database Restore Error: $($filename) -> Requested to retry backup with OPTION CONTINUE_AFTER_ERROR, but we already did!?";
                     }
                     else
                     {
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "110`r`n"); } catch { }
                         $null = SendOOBCommand $tcp 'A'; #abort
 
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "6`r`n"); } catch { }
                         Write-Error "Database Restore Error: $($filename) -> Cannot request to retry with CONTINUE_AFTER_ERROR option for file copy!? (this should never happen)";
                     }
                     break;
@@ -3054,10 +3036,8 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "6`r`n"); } catch {
     catch
     {
         WriteErrorEx $_;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "111`r`n"); } catch { }
         $null = SendOOBCommand $tcp 'A'; #signal early abortion
         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "7`r`n"); } catch { }
         #throw;
     }
     finally
@@ -3185,7 +3165,6 @@ function AutoRestoreDatabase
                 {
                     Write-Error "Database Restore Error: Cannot find MDF or LDF for $($p.namesWildcard) in $($p.path)";
                     $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "8`r`n"); } catch { }
                     continue; #skip to next database to restore
                 }
                 else
@@ -3194,7 +3173,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "8`r`n"); } catch {
                     if($confirmation -ne "y")
                     {
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "9`r`n"); } catch { }
                         continue; #skip to next database to restore
                     }
                     else
@@ -3219,7 +3197,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "9`r`n"); } catch {
                 $tcp,$networkStream = ConnectToDestinationServer 'R' $meta ([ref]$abort); #start auto restore
                 if($abort)
                 {
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "112`r`n"); } catch { }
                     $null = SendOOBCommand $tcp 'A'; #signal early abortion
                     return;
                 }
@@ -3238,7 +3215,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "112`r`n"); } catch
                 if($OOBCmd -ne 'D' -and $OOBCmd -ne 'X')
                 {
                     $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "10`r`n"); } catch { }
                     throw "Could not begin auto restore";
                 }
 
@@ -3386,7 +3362,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "10`r`n"); } catch 
             catch
             {
                 $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "11`r`n"); } catch { }
                 WriteErrorEx $_;
             }
             finally
@@ -3806,7 +3781,6 @@ function BackupDatabase
         catch
         {
             $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "12`r`n"); } catch { }
             WriteErrorEx $_ -addToNotification "Database Backup Error: $($SQLServer)\$($dbName) -> ";
 
             if($DB -ne $null)
@@ -4022,7 +3996,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "12`r`n"); } catch 
                             if(!$backupNotificationSent)
                             {
                                 $backupNotificationSent = $true;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "113`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #Abort current run
                             }
 
@@ -4066,7 +4039,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "113`r`n"); } catch
                             else
                             {
                                 $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "13`r`n"); } catch { }
                                 Write-Error "Database Backup Error: $($SQLServer)\$($dbName) -> Requested to send a full backup, but we are already sending a full backup!?";
 
                                 #break out of the backup loop
@@ -4076,7 +4048,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "13`r`n"); } catch 
                             if(!$backupNotificationSent)
                             {
                                 $backupNotificationSent = $true;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "114`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #Abort current run
                             }
 
@@ -4108,7 +4079,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "114`r`n"); } catch
                             else
                             {
                                 $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "14`r`n"); } catch { }
                                 Write-Error "Database Backup Error: $($SQLServer)\$($dbName) -> Requested to retry backup without RESTART, but we already did!?";
 
                                 #break out of the backup loop
@@ -4118,7 +4088,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "14`r`n"); } catch 
                             if(!$backupNotificationSent)
                             {
                                 $backupNotificationSent = $true;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "115`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #Abort current run
                             }
 
@@ -4150,7 +4119,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "115`r`n"); } catch
                             else
                             {
                                 $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "15`r`n"); } catch { }
                                 Write-Error "Database Backup Error: $($SQLServer)\$($dbName) -> Requested to retry backup without RESTART, but we already did!?";
 
                                 #break out of the backup loop
@@ -4160,7 +4128,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "15`r`n"); } catch 
                             if(!$backupNotificationSent)
                             {
                                 $backupNotificationSent = $true;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "116`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #Abort current run
                             }
 
@@ -4173,8 +4140,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "116`r`n"); } catch
                             if($OOBCmd -eq 'A')
                             {
                                 $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "16`r`n"); } catch { }
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "117`r`n"); } catch { }
                             }
                             else
                             {
@@ -4234,7 +4199,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "117`r`n"); } catch
                             if($failed)
                             {
                                 $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "17`r`n"); } catch { }
                                 Write-Error "Database Backup Error: $($SQLServer)\$($dbName) -> **** ALERT **** THE RESTORE SUPPOSEDLY SUCCEEDED, BUT WE HAVE AN ERROR ON THE BACKUP SIDE, THIS SHOULD NOT HAPPEN??";
                             }
                             else
@@ -4250,7 +4214,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "17`r`n"); } catch 
                                 $backupNotificationSent = $true;
                                 if($failed)
                                 {
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "118`r`n"); } catch { }
                                     $null = SendOOBCommand $tcp 'A'; #bort
                                 }
                                 else
@@ -4289,8 +4252,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "118`r`n"); } catch
                             WriteErrorEx $DBError -addToNotification "Database Backup Error: $($SQLServer)\$($dbName) -> ";
                             #notify far end that something went wrong and we are done sending
                             $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "18`r`n"); } catch { }
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "119`r`n"); } catch { }
                             $null = SendOOBCommand $tcp 'A'; #Abort
 
                             #break out of the backup loop
@@ -4312,7 +4273,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "119`r`n"); } catch
                         #$null = $task.Wait($shared.networkTimeout);
 
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "19`r`n"); } catch { }
                         Write-Error "Database Backup Error: $($SQLServer)\$($dbName) -> Backup Done Sending, But Destination Did Not Confirm, Calling Abort";
                         $backupComplete = $true; #exit backup loop
                         break;
@@ -4327,7 +4287,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "19`r`n"); } catch 
                     if(([DateTime]::Now - $taskEnded).TotalMilliseconds -gt $shared.networkTimeout)
                     {
                         $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "20`r`n"); } catch { }
                         Write-Error "Database Backup Error: $($SQLServer)\$($dbName) -> Timeout Waiting For Destination Response, VDI StreamComplete=$($vdi.StreamComplete)";
                         $backupComplete = $true;
                         break;
@@ -4371,8 +4330,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "20`r`n"); } catch 
         {
             $backupNotificationSent = $true;
             $shared.metrics.Failure++;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "21`r`n"); } catch { }
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "120`r`n"); } catch { }
             $null = SendOOBCommand $tcp 'A'; #Abort
             if($vdi -ne $null) { $vdi.AbortStream(); } #we probably don't need this, because the vdi.Dispose will make sure this is called
         }
@@ -6392,7 +6349,6 @@ function StartJob
                             catch
                             {
                                 WriteErrorEx $_ -addToNotification "Database Restore Error: $($FromServer):$($FromPath) -> Sending Abort.";
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "121`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #bort
                             }
                             break;
@@ -6412,7 +6368,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "121`r`n"); } catch
                             catch
                             {
                                 WriteErrorEx $_;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "122`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #bort
                             }
                             break;
@@ -6447,7 +6402,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "122`r`n"); } catch
                             catch
                             {
                                 WriteErrorEx $_;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "123`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #bort
                             }
                             finally
@@ -6480,7 +6434,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "123`r`n"); } catch
                             catch
                             {
                                 WriteErrorEx $_;
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "124`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #bort
                             }
                             break;
@@ -6596,7 +6549,6 @@ try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "124`r`n"); } catch
                             catch
                             {
                                 Write-Error "Database Restore Error: $($dest.server)\$($meta.name) -> $($_.Exception.Message)";
-try { [System.IO.File]::AppendAllText("\Powerbak\error.log", "125`r`n"); } catch { }
                                 $null = SendOOBCommand $tcp 'A'; #bort
                             }
                             finally
