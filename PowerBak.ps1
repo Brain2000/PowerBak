@@ -465,6 +465,7 @@ Add-Type -Path "$($PSScriptRoot)\lib\ZStandard.Net.dll";
 [string]$autoFolderDateTime = "yyyyMMdd-HHmm";
 [string]$jobNotificationFromEmail = "[fill this in]"
 [string]$jobNotificationToEmails = "[fill these in]";
+[string]$jobNotificationSubject = "PowerBak Report";
 [string]$SMTPUsername = "";
 [string]$SMTPPassword = "";
 [string]$SMTPServer = "[your SMTP IP]";
@@ -7470,11 +7471,11 @@ try
         {
             [pscredential]$emailCred = $null;
             $emailCred = [pscredential]::new($SMTPUsername, (ConvertTo-SecureString $SMTPPassword -AsPlainText -Force));
-            Send-MailMessage -To $jobNotificationToEmails.Split("[,;]") -From $jobNotificationFromEmail -Subject "Copy Database Report" -Body "$($paramList)$($snapshotResults)$($jobResults)" -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential $emailCred;
+            Send-MailMessage -To $jobNotificationToEmails.Split("[,;]") -From $jobNotificationFromEmail -Subject $jobNotificationSubject -Body "$($paramList)$($snapshotResults)$($jobResults)" -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential $emailCred;
         }
         else
         {
-            Send-MailMessage -To $jobNotificationToEmails.Split("[,;]") -From $jobNotificationFromEmail -Subject "Copy Database Report" -Body "$($paramList)$($snapshotResults)$($jobResults)" -SmtpServer $SMTPServer -Port $SMTPPort;
+            Send-MailMessage -To $jobNotificationToEmails.Split("[,;]") -From $jobNotificationFromEmail -Subject $jobNotificationSubject -Body "$($paramList)$($snapshotResults)$($jobResults)" -SmtpServer $SMTPServer -Port $SMTPPort;
         }
     }
 }
