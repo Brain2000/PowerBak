@@ -1,10 +1,12 @@
-.SYNOPSIS
+## SYNOPSIS
+
 Copy/Sync Databases Between Two Servers Using Powershell.
 Full, Differential, and Incremental (Log) are Supported.
 Files Paths Can be Either an MSSQL Server or a File. The destination can stream to both simultaneously.
 
 
-.DESCRIPTION
+## DESCRIPTION
+
 Copy/Sync Databases between two servers using Powershell.
 Full, Differential, and Incremental (Log) are supported.
 Files paths can be either an MSSQL server or a File. The destination can stream to both simultaneously.
@@ -27,23 +29,23 @@ It will search through the snapshots for the closest date for the mdf/ldf files,
 It will then apply the proper differential/incrementals (depending on the -BackupType parameter) to bring it to the date/time you requested.
 
 
-Server Roles
-------------
+## Server Roles
+
 The server this Powershell script is run from is the "controller". It connects to a "source" and "destination" server and sends them the necessary commands to facilitate the backup.
 Status reports are sent back to the controller, which in turn displays real time progress on the screen.
 
 This will allow the controller to direct two computers to back up to each other directly without having to pipe the backup through the controller itself.
 
 
-Source/Destination Streaming
-----------------------------
+## Source/Destination Streaming
+
 The destination server creates a TCP listener. The source connects to the destination and pushes metadata to the destination, followed by the backup.
 If there are multiple ToPaths, the destination will open all of them and then copy the incoming stream to each one simultaneously.
 Status updates are sent between the source and destination via TCP OOB Messages.
 
 
-Communication Between Source and Destination
---------------------------------------------
+## Communication Between Source and Destination
+
 The source will connect to the destination, send a command, process the command, then disconect.
 The source will connect again to the destination for the next command, and so on, and so on. This helps assure a clean start each time.
 Each command wil be immediately followed up by a serialized MetaData class describing what the command needs to do (except "X").
@@ -87,13 +89,13 @@ Both the source and destinations will ALWAYS send eaach other exactly one OOB co
 Either side can initiate the first OOB message, depending on the circumstances, as an error condition can originate from either side preventing a backup from completing.
 
 
-Failure Notifications
----------------------
+## Failure Notifications
+
 When an event that causes a SQL or file copy to fail on either end, in an unrecoverable way, it will be collected so that it can be displayed/emailed in a report.
 
 
-Seeding Scenarios
------------------
+## Seeding Scenarios
+
 When Differential or Incremental Backups are being used, databases must have an initial seeding done before these backups can be performed.
 Seeding automatically happens. Here are some different scenarios that will trigger seeding:
 
@@ -111,14 +113,14 @@ Author: Brian Coverstone
 Creation Date: 11/1/2018
 
 
-TODO
-----
+## TODO
+
  1) Add -LimitNetworkBytesPerSecond parameter
  2) Add Encryption
 
 
-TESTS
------
+## TESTS
+
 *1) Add parameter to randomize the order databases are run
 *2) Check for OOB messages even when a stream.read does not get any bytes?
 *3) Make it so a flush will wait until we confirm that the restore worked, otherwise it will abort. This will keep a database from losing a log that wasn't able to restore properly.
@@ -152,6 +154,8 @@ TESTS
 *31) Write backups to .dat_ file, and rename it if it completes successfully, otherwise delete it.
 *32) Create VSS watchdog on destination servers that will create/delete a snapshot to increase the shadowstorage when necessary
 
+
+## Parameters
 
 .PARAMETER FromServer
 The source server
@@ -356,6 +360,8 @@ DayInterval: <default = 1>
 This is a special parameter that you can apply to a job configuration in a file. It will prevent any of the command line arguments from overriding or adding to the configuration for that particular job.
 The use case for this would be a volume snapshot maintenance job.
 
+
+## Examples
 
 .EXAMPLE
 PowerBak -FromServer SQLServer1 -FromPath MSSQL:\* -ToServer localhost -ToPath MSSQL: -BackupType Full -CopyOnly
