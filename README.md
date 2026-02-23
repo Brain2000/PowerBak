@@ -99,12 +99,12 @@ When an event that causes a SQL or file copy to fail on either end, in an unreco
 When Differential or Incremental Backups are being used, databases must have an initial seeding done before these backups can be performed.
 Seeding automatically happens. Here are some different scenarios that will trigger seeding:
 
- 1) Existing databases that need to be seeded for the first time
- 2) New customer database created or added
- 3) Incremenal log chain becomes lost
- 4) Destination database is deleted
- 5) Destination database becomes corrupt
- 6) Destination database restore does not complete, or cannot be resumed for some reason
+ 1. Existing databases that need to be seeded for the first time
+ 2. New customer database created or added
+ 3. Incremenal log chain becomes lost
+ 4. Destination database is deleted
+ 5. Destination database becomes corrupt
+ 6. Destination database restore does not complete, or cannot be resumed for some reason
 
 
 .NOTES
@@ -121,38 +121,38 @@ Creation Date: 11/1/2018
 
 ## TESTS
 
- *1) Add parameter to randomize the order databases are run
- *2) Check for OOB messages even when a stream.read does not get any bytes?
- *3) Make it so a flush will wait until we confirm that the restore worked, otherwise it will abort. This will keep a database from losing a log that wasn't able to restore properly.
- *4) Add SEED option, so you can choose NOT to seed if a database needs it (will include option to skip filestream when seeding too), or to ONLY perform initial seeding for those that need it.
- *5) Fix remote session so multiple paths can be used
- *6) System databases must always perform a full backup. They should never restore to SQL, but a file destination is ok
- *7) Implement Replace command for restore command/file system (i.e. don't overwrite the file)
- *8) Find all errors on the destination restore that need to be recovered
- *9) Add MSDB history purge days for source/destination
- *10) Fix master database backup skip hanging source
- *11) Add ability to expand programming for destination filepaths
- *12) If a destination folder does not exist, create it
- *13) Add DeleteAfterNoBackupRestoreDays purge switch for destination
- *14) Aggregate backup into multiple jobs with configuration file
- *15) Test restore dbellomail from both databases to make sure the REPLACE option and email logging works properly
- *16) Volume snapshot management
- *17) Copy File src->dest (when restoring a database, to copy MDF/LDF/UND files to SQL server)
- *18) Write Auto Restore for snapshot mdf/ldf/und + logs, with point in time restore parameter
- *19) Add backupjob global options, such as SinceHours, so it will work with multiple jobs
- *20) Add ability to retry without RESTART option
- *21) Auto Restore should make sure the recovery type to NoRecovery for further log restores
- *22) Allow autorestore to pick a different destination database name
- *23) Allow autorestore to restore to a specific point in time (i.e. 2:00pm, 3:00pm)
- *24) Allow autorestore to bulk restore multiple databases in one operation
- *25) Clean up old log backups in incremental folders (and empty folders)
- *26) Add Src/Dest Credentials
- *27) Add numeric metrics for each type of backup plus errors (full, diff, incremental, failed)
- *28) Backup scheduling
- *29) Detect VSS error when drive goes offline and recover from the error
-  30) Add -CheckDB parameter
- *31) Write backups to .dat_ file, and rename it if it completes successfully, otherwise delete it.
- *32) Create VSS watchdog on destination servers that will create/delete a snapshot to increase the shadowstorage when necessary
+ 1. *Add parameter to randomize the order databases are run
+ 2. *Check for OOB messages even when a stream.read does not get any bytes?
+ 3. *Make it so a flush will wait until we confirm that the restore worked, otherwise it will abort. This will keep a database from losing a log that wasn't able to restore properly.
+ 4. *Add SEED option, so you can choose NOT to seed if a database needs it (will include option to skip filestream when seeding too), or to ONLY perform initial seeding for those that need it.
+ 5. *Fix remote session so multiple paths can be used
+ 6. *System databases must always perform a full backup. They should never restore to SQL, but a file destination is ok
+ 7. *Implement Replace command for restore command/file system (i.e. don't overwrite the file)
+ 8. *Find all errors on the destination restore that need to be recovered
+ 9. *Add MSDB history purge days for source/destination
+ 10. *Fix master database backup skip hanging source
+ 11. *Add ability to expand programming for destination filepaths
+ 12. *If a destination folder does not exist, create it
+ 13. *Add DeleteAfterNoBackupRestoreDays purge switch for destination
+ 14. *Aggregate backup into multiple jobs with configuration file
+ 15. *Test restore dbellomail from both databases to make sure the REPLACE option and email logging works properly
+ 16. *Volume snapshot management
+ 17. *Copy File src->dest (when restoring a database, to copy MDF/LDF/UND files to SQL server)
+ 18. *Write Auto Restore for snapshot mdf/ldf/und + logs, with point in time restore parameter
+ 19. *Add backupjob global options, such as SinceHours, so it will work with multiple jobs
+ 20. *Add ability to retry without RESTART option
+ 21. *Auto Restore should make sure the recovery type to NoRecovery for further log restores
+ 22. *Allow autorestore to pick a different destination database name
+ 23. *Allow autorestore to restore to a specific point in time (i.e. 2:00pm, 3:00pm)
+ 24. *Allow autorestore to bulk restore multiple databases in one operation
+ 25. *Clean up old log backups in incremental folders (and empty folders)
+ 26. *Add Src/Dest Credentials
+ 27. *Add numeric metrics for each type of backup plus errors (full, diff, incremental, failed)
+ 28. *Backup scheduling
+ 29. *Detect VSS error when drive goes offline and recover from the error
+ 30. *Add -CheckDB parameter
+ 31. *Write backups to .dat_ file, and rename it if it completes successfully, otherwise delete it.
+ 32. *Create VSS watchdog on destination servers that will create/delete a snapshot to increase the shadowstorage when necessary
 
 
 ## Parameters
