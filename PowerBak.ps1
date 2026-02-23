@@ -463,11 +463,11 @@ Add-Type -Path "$($PSScriptRoot)\lib\ZStandard.Net.dll";
 ###########################>
 #TODO: move to external config file
 [string]$autoFolderDateTime = "yyyyMMdd-HHmm";
-[string]$jobNotificationFromEmail = "prometheus@mainsequence.net"
-[string]$jobNotificationToEmails = "bcoverstone@mainsequence.net; wgeissinger@mainsequence.net; ron@mainsequence.net";
+[string]$jobNotificationFromEmail = "[fill this in]"
+[string]$jobNotificationToEmails = "[fill these in]";
 [string]$SMTPUsername = "";
 [string]$SMTPPassword = "";
-[string]$SMTPServer = "66.181.76.43";
+[string]$SMTPServer = "[your SMTP IP]";
 [int]$SMTPPort = 25;
 
 
